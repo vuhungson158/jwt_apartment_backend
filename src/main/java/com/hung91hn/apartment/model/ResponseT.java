@@ -4,7 +4,7 @@ public class ResponseT<T> extends Response {
     public T data;
 
     public ResponseT(T data) {
-        super(200, "Thành công");
+        super();
         this.data = data;
     }
 }

@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.text.ParseException;
-import java.util.Date;
 
 @Service
 public class JwtUtil {
@@ -62,14 +61,12 @@ public class JwtUtil {
     public UserPrincipal validate(String token) {
         if (StringUtils.hasText(token)) {
             final JWTClaimsSet claims = getClaims(token);
-            if (claims != null && claims.getExpirationTime().after(new Date())) {
-                try {
-                    JSONObject jsonObject = (JSONObject) claims.getClaim(USER);
-                    final UserPrincipal user = mapper.readValue(jsonObject.toJSONString(), UserPrincipal.class);
-                    if (user != null && token.equals(template.opsForValue().get(user.phone))) return user;
-                } catch (Exception e) {
-                    util.log(e.toString());
-                }
+            if (claims != null) try {
+                JSONObject jsonObject = (JSONObject) claims.getClaim(USER);
+                final UserPrincipal user = mapper.readValue(jsonObject.toJSONString(), UserPrincipal.class);
+                if (user != null && token.equals(template.opsForValue().get(user.phone))) return user;
+            } catch (Exception e) {
+                util.log(e.toString());
             }
         }
 

@@ -1,6 +1,7 @@
 package com.hung91hn.apartment.security;
 
 import com.hung91hn.apartment.Util;
+import com.hung91hn.apartment.model.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,7 +38,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             }
 
             filterChain.doFilter(request, response);
-        } else util.writeResponse(response, 402, "Sai phiên bản");
+        } else util.writeResponse(response, Response.INVALID_VERSION, "Sai phiên bản");
         //todo final String language = request.getHeader("language");
     }
 

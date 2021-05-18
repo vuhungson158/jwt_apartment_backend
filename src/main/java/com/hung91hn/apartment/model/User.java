@@ -1,6 +1,7 @@
 package com.hung91hn.apartment.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
@@ -11,9 +12,11 @@ public class User implements Serializable {
     private static final long serialVersionUID = 1L;
     //STATE_
     public static final int AVAILABLE = 1;
-    //ROLE_
-    public static final String regex = ",", USER = "USER", HOST = "HOST", ADMIN = "ADMIN";
+
+    public static final String ROLE_ = "ROLE_", regex = ",", USER = "USER", HOST = "HOST", ADMIN = "ADMIN";
+
     @Id
+    @GeneratedValue
     public long id;
 
     public int state;
@@ -24,7 +27,7 @@ public class User implements Serializable {
         roles += regex + r;
     }
 
-    public String[] getRoles() {
+    public String[] checkRoles() {
         return roles.split(regex);
     }
 }

@@ -1,5 +1,6 @@
-package com.hung91hn.apartment.model;
+package com.hung91hn.apartment.repository;
 
+import com.hung91hn.apartment.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

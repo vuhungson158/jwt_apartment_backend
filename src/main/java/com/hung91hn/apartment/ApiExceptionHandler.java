@@ -10,6 +10,6 @@ public class ApiExceptionHandler {
     @ExceptionHandler(Exception.class)
     public Response handleAllException(Exception e, WebRequest request) {
         e.printStackTrace();
-        return new Response(500, "Lỗi hệ thống, xin thử lại sau!");
+        return new Response(Response.ERROR_SERVER, "Lỗi server!");
     }
 }

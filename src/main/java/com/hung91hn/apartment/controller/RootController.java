@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class RootController {
 
-	@RequestMapping("/")
-	public String get() {
-		return "Service Apartment đang chạy.";
-	}
+    @RequestMapping("/")
+    public String get() {
+        return "Apartment xin chào.";
+    }
 }

@@ -2,6 +2,7 @@ package com.hung91hn.apartment.controller;
 
 import com.hung91hn.apartment.Util;
 import com.hung91hn.apartment.model.*;
+import com.hung91hn.apartment.repository.UserRepository;
 import com.hung91hn.apartment.security.JwtUtil;
 import com.hung91hn.apartment.security.UserPrincipal;
 import com.twilio.rest.api.v2010.account.Message;
@@ -48,7 +49,7 @@ public class UserController {
 
         final int timeOut = 10;
         inActive.opsForValue().set(user.phone, new UserRegister(otp, user), timeOut, TimeUnit.MINUTES);
-        return new Response(200, String.format("OTP đã được gửi đến số điện thoại: %s\nVui lòng kích hoạt trong %d phút!", user.phone, timeOut));
+        return new Response(Response.SUCCESS, String.format("OTP đã được gửi đến số điện thoại: %s\nVui lòng kích hoạt trong %d phút!", user.phone, timeOut));
     }
 
     private void sendSMS(String phone, int otp) {
