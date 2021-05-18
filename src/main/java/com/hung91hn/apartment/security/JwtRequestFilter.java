@@ -17,6 +17,7 @@ import java.io.IOException;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
+    public static final String KeyAut = "Authorization";
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -29,7 +30,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         final String appVer = request.getHeader("appVer");
         if ("/".equals(request.getServletPath()) || appVer != null && appVer.equals("1.0")) {
-            final UserPrincipal user = jwtUtil.validate(request.getHeader("Authorization"));
+            final UserPrincipal user = jwtUtil.validate(request.getHeader(KeyAut));
             if (user != null) {
                 final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user,
                         null, user.getAuthorities());

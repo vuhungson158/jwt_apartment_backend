@@ -1,4 +1,4 @@
-package com.hung91hn.apartment.security;
+package com.hung91hn.apartment;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
