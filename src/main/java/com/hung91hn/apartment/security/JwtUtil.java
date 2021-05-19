@@ -39,7 +39,7 @@ public class JwtUtil {
             template.opsForValue().set(user.phone, token);
             return token;
         } catch (Exception e) {
-            util.log(e.toString());
+            util.print(e.toString());
             return null;
         }
     }
@@ -53,7 +53,7 @@ public class JwtUtil {
                 claims = signedJWT.getJWTClaimsSet();
             }
         } catch (ParseException | JOSEException e) {
-            util.log(e.toString());
+            util.print(e.toString());
         }
         return claims;
     }
@@ -66,7 +66,7 @@ public class JwtUtil {
                 final UserPrincipal user = mapper.readValue(jsonObject.toJSONString(), UserPrincipal.class);
                 if (user != null && token.equals(template.opsForValue().get(user.phone))) return user;
             } catch (Exception e) {
-                util.log(e.toString());
+                util.print(e.toString());
             }
         }
 

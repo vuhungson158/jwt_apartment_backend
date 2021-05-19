@@ -44,7 +44,7 @@ public class UserController {
         user.password = encoder.encode(user.password);
 
         final int otp = ThreadLocalRandom.current().nextInt(0, 1000000);
-        util.log("otp: " + otp);
+        util.print("otp: " + otp);
 //        sendSMS(user.phone, otp);
 
         final int timeOut = 10;

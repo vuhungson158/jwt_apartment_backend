@@ -1,5 +1,6 @@
 package com.hung91hn.apartment.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hung91hn.apartment.FileUtil;
 import com.hung91hn.apartment.model.Place;
 import com.hung91hn.apartment.model.PlaceFilter;
@@ -21,18 +22,23 @@ import static java.lang.Math.abs;
 @RequestMapping("/place/")
 public class PlaceController {
     @Autowired
+    private ObjectMapper mapper;
+    @Autowired
     private PlaceRepository repository;
     @Autowired
     private FileUtil fileUtil;
 
     @PostMapping("create")
-    public Response create(Place object, MultipartFile file) throws IOException {
-        final String err = validate(object);
+    public Response create(String object, MultipartFile file) throws IOException {
+
+        final Place place = mapper.readValue(object, Place.class);
+
+        final String err = validate(place);
         if (err != null) return new Response(err);
 
-        final Place place = repository.save(object);
+        final Place _place = repository.save(place);
 
-        if (file != null) fileUtil.save("places/" + place.id, file);
+        if (file != null) fileUtil.save("places/" + _place.id + ".zip", file);
 
         return new Response();
     }
@@ -49,8 +55,6 @@ public class PlaceController {
 
     @PostMapping("gets")
     public Response gets(@RequestBody PlaceFilter filter) {
-        //todo bug tại kinh độ gốc
-
 
 
         return new Response();

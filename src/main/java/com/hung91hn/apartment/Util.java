@@ -10,7 +10,7 @@ import java.io.IOException;
 
 @Component
 public class Util {
-    public void log(String s) {
+    public void print(String s) {
         System.out.println(s);
     }
 

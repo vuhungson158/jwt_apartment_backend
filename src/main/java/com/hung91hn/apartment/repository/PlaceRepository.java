@@ -15,6 +15,7 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
         ORDER BY voteUP/votes des
         select limit = 10
          */
+    //todo bug tại kinh độ gốc
 
 //    @Query("SELECT p FROM Place p WHERE p.latitude > :#{#f.south} AND p.latitude < :#{#f.north} AND p.longitude > :#{#f.west} AND p.longitude < :#{#f.east}")
 //    List<Place> search(@Param("filter") PlaceFilter f);

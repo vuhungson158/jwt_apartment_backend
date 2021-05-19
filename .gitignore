@@ -4,6 +4,7 @@ gradlew
 gradlew.bat
 build/
 logs/
+file/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
