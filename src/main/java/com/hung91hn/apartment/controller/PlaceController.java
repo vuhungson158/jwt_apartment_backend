@@ -1,7 +1,8 @@
 package com.hung91hn.apartment.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hung91hn.apartment.FileUtil;
+import com.hung91hn.apartment.helper.FileUtil;
+import com.hung91hn.apartment.helper.Log;
 import com.hung91hn.apartment.model.Place;
 import com.hung91hn.apartment.model.PlaceFilter;
 import com.hung91hn.apartment.model.Response;
@@ -27,9 +28,12 @@ public class PlaceController {
     private PlaceRepository repository;
     @Autowired
     private FileUtil fileUtil;
+    @Autowired
+    private Log log;
 
     @PostMapping("create")
     public Response create(String object, MultipartFile file) throws IOException {
+        log.i("POST:/place/create\n" + object);
 
         final Place place = mapper.readValue(object, Place.class);
 

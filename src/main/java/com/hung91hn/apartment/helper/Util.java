@@ -1,4 +1,4 @@
-package com.hung91hn.apartment;
+package com.hung91hn.apartment.helper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hung91hn.apartment.model.Response;

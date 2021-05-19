@@ -1,6 +1,6 @@
 package com.hung91hn.apartment.controller;
 
-import com.hung91hn.apartment.Util;
+import com.hung91hn.apartment.helper.Util;
 import com.hung91hn.apartment.model.*;
 import com.hung91hn.apartment.repository.UserRepository;
 import com.hung91hn.apartment.security.JwtUtil;

@@ -1,6 +1,6 @@
 package com.hung91hn.apartment.security;
 
-import com.hung91hn.apartment.Util;
+import com.hung91hn.apartment.helper.Util;
 import com.hung91hn.apartment.model.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

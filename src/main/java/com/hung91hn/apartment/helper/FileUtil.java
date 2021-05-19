@@ -1,4 +1,4 @@
-package com.hung91hn.apartment;
+package com.hung91hn.apartment.helper;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

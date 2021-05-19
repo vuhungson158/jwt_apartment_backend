@@ -1,7 +1,7 @@
 package com.hung91hn.apartment.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hung91hn.apartment.Util;
+import com.hung91hn.apartment.helper.Util;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;

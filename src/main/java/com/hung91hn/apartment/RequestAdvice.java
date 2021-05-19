@@ -2,9 +2,8 @@ package com.hung91hn.apartment;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hung91hn.apartment.helper.Log;
 import com.hung91hn.apartment.security.JwtRequestFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpInputMessage;
@@ -18,7 +17,8 @@ import java.lang.reflect.Type;
 
 @RestControllerAdvice
 public class RequestAdvice extends RequestBodyAdviceAdapter {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    @Autowired
+    private Log log;
     @Autowired
     private ObjectMapper mapper;
     @Autowired
@@ -43,7 +43,7 @@ public class RequestAdvice extends RequestBodyAdviceAdapter {
             e.printStackTrace();
         }
 
-        logger.info(builder.toString());
+        log.i(builder.toString());
         return super.afterBodyRead(body, inputMessage, parameter, targetType, converterType);
     }
 }
