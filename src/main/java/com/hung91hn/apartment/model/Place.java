@@ -14,7 +14,7 @@ public class Place {
     public double latitude, longitude;
     public String name, address, moreInfo;
     public boolean privateWc, airConditioner, hotWater, fridge, washer;
-    public int averageMin, averageMax, priceMin, priceMax, roomCount, parkCapacity;
+    public int acreageMin, acreageMax, priceMin, priceMax, roomCount, parkCapacity;
     public Integer curfew;
     public Long ownerId, inaugurate;
 }
