@@ -25,7 +25,7 @@ public class JwtUtil {
     @Autowired
     private Util util;
     @Autowired
-    private RedisTemplate template;
+    private RedisTemplate redis;
     @Autowired
     private ObjectMapper mapper;
 
@@ -36,7 +36,7 @@ public class JwtUtil {
             final SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), builder.build());
             signedJWT.sign(new MACSigner(SECRET.getBytes()));
             final String token = signedJWT.serialize();
-            template.opsForValue().set(user.phone, token);
+            redis.opsForValue().set(user.phone, token);
             return token;
         } catch (Exception e) {
             util.print(e.toString());
@@ -64,7 +64,7 @@ public class JwtUtil {
             if (claims != null) try {
                 JSONObject jsonObject = (JSONObject) claims.getClaim(USER);
                 final UserPrincipal user = mapper.readValue(jsonObject.toJSONString(), UserPrincipal.class);
-                if (user != null && token.equals(template.opsForValue().get(user.phone))) return user;
+                if (user != null && token.equals(redis.opsForValue().get(user.phone))) return user;
             } catch (Exception e) {
                 util.print(e.toString());
             }

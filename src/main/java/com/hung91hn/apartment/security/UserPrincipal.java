@@ -1,5 +1,6 @@
 package com.hung91hn.apartment.security;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hung91hn.apartment.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,6 +13,9 @@ import java.util.Set;
 public class UserPrincipal extends User implements UserDetails {
     private static final long serialVersionUID = 1L;
 
+    public String notifyId, deviceId, os, osVer;
+
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         final Set<GrantedAuthority> authorities = new HashSet<>();
@@ -25,26 +29,31 @@ public class UserPrincipal extends User implements UserDetails {
         return password;
     }
 
+    @JsonIgnore
     @Override
     public String getUsername() {
         return phone;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return true;

@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
@@ -29,16 +28,16 @@ public class UserController {
     @Autowired
     private JwtUtil jwtUtil;
     @Autowired
-    private RedisTemplate inActive;
+    private RedisTemplate redis;
     @Autowired
     private Util util;
 
     @PostMapping("/register")
-    public Response register(@RequestBody User user) {
+    public Response register(@RequestBody UserPrincipal user) {
         final String valid = validateLogin(user);
         if (valid != null) return new Response(valid);
 
-        if (inActive.opsForValue().get(user.phone) != null || repository.findByPhone(user.phone) != null)
+        if (redis.opsForValue().get(user.phone) != null || repository.findByPhone(user.phone) != null)
             return new Response("Tên đăng nhập hoặc số điện thoại đã tồn tại");
 
         user.password = encoder.encode(user.password);
@@ -48,7 +47,7 @@ public class UserController {
 //        sendSMS(user.phone, otp);
 
         final int timeOut = 10;
-        inActive.opsForValue().set(user.phone, new UserRegister(otp, user), timeOut, TimeUnit.MINUTES);
+        redis.opsForValue().set(user.phone, new UserRegister(otp, user), timeOut, TimeUnit.MINUTES);
         return new Response(Response.SUCCESS, String.format("OTP đã được gửi đến số điện thoại: %s\nVui lòng kích hoạt trong %d phút!", user.phone, timeOut));
     }
 
@@ -61,31 +60,34 @@ public class UserController {
     @PostMapping("/active")
     public Response active(@RequestBody UserActive userActive) {
         final String key = userActive.phone;
-        final UserRegister _userRegister = (UserRegister) inActive.opsForValue().get(key);
+        final UserRegister _userRegister = (UserRegister) redis.opsForValue().get(key);
         if (_userRegister == null || userActive.otp != _userRegister.otp) return new Response("Sai OTP");
 
-        final User user = _userRegister.user;
+        final UserPrincipal user = _userRegister.user;
         user.roles = User.USER;
-        user.state = User.AVAILABLE;
-        inActive.delete(key);
+        user.state = User.State.Activate;
+        redis.delete(key);
 
         return responseLogin(repository.save(user));
     }
 
     @PostMapping("/login")
-    public Response login(@RequestBody User user) {
-        final User _user = repository.findByPhone(user.phone);
-        return _user != null && encoder.matches(user.password, _user.password) ?
-                responseLogin(_user) : new Response("Thông tin không chính xác");
+    public Response login(@RequestBody UserPrincipal userPrincipal) {
+        final User user = repository.findByPhone(userPrincipal.phone);
+        if (user != null && encoder.matches(userPrincipal.password, user.password)) {
+            if (user.state == User.State.Activate) {
+                userPrincipal.id = user.id;
+                userPrincipal.roles = user.roles;
+                userPrincipal.displayName = user.displayName;
+                userPrincipal.idCard = user.idCard;
+                return responseLogin(userPrincipal);
+            } else return new Response("Tài khoản bị vô hiệu");
+        } else return new Response("Thông tin không chính xác");
     }
 
-    private Response responseLogin(User user) {
-        final UserPrincipal userPrincipal = new UserPrincipal();
-        userPrincipal.phone = user.phone;
-        userPrincipal.roles = user.roles;
-
+    private Response responseLogin(UserPrincipal user) {
         user.password = null;
-        return new ResponseT<>(new UserLogin(jwtUtil.generateToken(userPrincipal), user));
+        return new ResponseT<>(new UserLogin(jwtUtil.generateToken(user), user));
     }
 
     private String validateLogin(User user) {
@@ -112,7 +114,7 @@ public class UserController {
         return builder.length() > 0 ? "Không được để trống: " + builder : null;
     }
 
-    @PostMapping("/getUser")
+    /*@PostMapping("/getUser")
     public Response get(@RequestBody long id) {
         final Optional<User> optional = repository.findById(id);
         if (!optional.isPresent()) return new Response("User không tồn tại");
@@ -120,5 +122,5 @@ public class UserController {
         final User user = optional.get();
         user.password = null;
         return new ResponseT<>(user);
-    }
+    }*/
 }
