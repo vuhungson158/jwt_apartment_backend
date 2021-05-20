@@ -13,15 +13,14 @@ import java.util.List;
 public interface PlaceRepository extends JpaRepository<Place, Long> {
 
         /* todo SQL
-        longitude > west; < east
-        latitude < north; > south
         if  filter
         get all vote with placeId
         ORDER BY voteUP/votes des
         select limit = 10
          */
-    //todo bug tại kinh độ gốc
 
-    @Query("SELECT p FROM Place p WHERE p.latitude > :#{#f.latMin} AND p.latitude < :#{#f.latMax} AND p.longitude > :#{#f.lngMin} AND p.longitude < :#{#f.lngMax}")
+    @Query("SELECT p FROM Place p WHERE " +
+            "p.latitude > :#{#f.latMin} AND p.latitude < :#{#f.latMax} AND p.longitude > :#{#f.lngMin} AND p.longitude < :#{#f.lngMax}"
+            /*+ " and (:#{#f.privateWC} = 0 or p.privateWC = :#{#f.privateWC})"*/)
     List<Place> search(@Param("f") PlaceFilter filter);
 }
