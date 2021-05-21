@@ -8,6 +8,8 @@ import com.hung91hn.apartment.model.PlaceFilter;
 import com.hung91hn.apartment.model.Response;
 import com.hung91hn.apartment.model.ResponseT;
 import com.hung91hn.apartment.repository.PlaceRepository;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -24,6 +28,7 @@ import static java.lang.Math.abs;
 @RestController
 @RequestMapping("/place/")
 public class PlaceController {
+    private final String path = "places/%d.zip";
     @Autowired
     private ObjectMapper mapper;
     @Autowired
@@ -44,7 +49,7 @@ public class PlaceController {
 
         final Place _place = repository.save(place);
 
-        if (file != null) fileUtil.save("places/" + _place.id + ".zip", file);
+        if (file != null) fileUtil.save(String.format(path, _place.id), file);
 
         return new Response();
     }
@@ -65,5 +70,16 @@ public class PlaceController {
 
         return places.isEmpty() ? new Response("Không có phòng nào ở khu vực này thoả mãn yêu cầu của bạn")
                 : new ResponseT<>(places);
+    }
+
+    @PostMapping("pictures/download")
+    public void getFile(@RequestBody long id, HttpServletResponse response) {
+        try {
+            IOUtils.copy(new FileInputStream(fileUtil.root + String.format(path, id)),
+                    response.getOutputStream());
+            response.flushBuffer();
+        } catch (IOException e) {
+            response.setStatus(HttpStatus.SC_NOT_FOUND);
+        }
     }
 }

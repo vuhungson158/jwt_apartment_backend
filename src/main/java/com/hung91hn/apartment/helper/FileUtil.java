@@ -8,8 +8,10 @@ import java.io.IOException;
 
 @Service
 public class FileUtil {
+    public final String root = "file/upload/";
+
     public void save(String path, MultipartFile file) throws IOException {
-        final File f = new File("file/upload/" + path);
+        final File f = new File(root + path);
         if ((f.getParentFile().exists() || f.getParentFile().mkdirs()) && (f.exists() || f.createNewFile()))
             file.transferTo(f.toPath());
     }
