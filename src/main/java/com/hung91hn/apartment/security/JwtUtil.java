@@ -58,16 +58,21 @@ public class JwtUtil {
         return claims;
     }
 
+    public UserPrincipal getUser(String jwt) {
+        final JWTClaimsSet claims = getClaims(jwt);
+        if (claims != null) try {
+            final JSONObject jsonObject = (JSONObject) claims.getClaim(USER);
+            return mapper.readValue(jsonObject.toJSONString(), UserPrincipal.class);
+        } catch (Exception e) {
+            util.print(e.toString());
+        }
+        return null;
+    }
+
     public UserPrincipal validate(String token) {
         if (StringUtils.hasText(token)) {
-            final JWTClaimsSet claims = getClaims(token);
-            if (claims != null) try {
-                JSONObject jsonObject = (JSONObject) claims.getClaim(USER);
-                final UserPrincipal user = mapper.readValue(jsonObject.toJSONString(), UserPrincipal.class);
-                if (user != null && token.equals(redis.opsForValue().get(user.phone))) return user;
-            } catch (Exception e) {
-                util.print(e.toString());
-            }
+            final UserPrincipal user = getUser(token);
+            if (user != null && token.equals(redis.opsForValue().get(user.phone))) return user;
         }
 
         return null;

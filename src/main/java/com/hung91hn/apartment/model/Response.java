@@ -18,9 +18,13 @@ public class Response {
         this.message = message;
     }
 
-    public Response(Object data) {
+    public Response() {
         this.code = SUCCESS;
         this.message = "Thành công";
+    }
+
+    public Response(Object data) {
+        this();
         this.data = data;
     }
 }

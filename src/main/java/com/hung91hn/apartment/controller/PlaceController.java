@@ -5,6 +5,7 @@ import com.hung91hn.apartment.helper.FileUtil;
 import com.hung91hn.apartment.helper.Log;
 import com.hung91hn.apartment.model.*;
 import com.hung91hn.apartment.repository.PlaceRepository;
+import com.hung91hn.apartment.repository.VoteRepository;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Math.abs;
@@ -35,6 +37,10 @@ public class PlaceController {
     private FileUtil fileUtil;
     @Autowired
     private Log log;
+
+
+    @Autowired
+    private VoteRepository voteRepo;
 
     @RolesAllowed(User.USER)
     @PostMapping("create")
@@ -65,12 +71,16 @@ public class PlaceController {
     @PostMapping("gets")
     public Response gets(@RequestBody PlaceFilter filter) {
         final List<Place> places = repository.search(filter);
+        if (places.isEmpty()) return new Response("Không có phòng nào ở khu vực này thoả mãn yêu cầu của bạn");
 
-        return places.isEmpty() ? new Response("Không có phòng nào ở khu vực này thoả mãn yêu cầu của bạn")
-                : new Response(places);
+        final List<PlaceVote> placeVotes = new ArrayList<>();
+        places.forEach(place -> placeVotes.add(new PlaceVote(place, new VoteCount(voteRepo.findAllByPlaceId(place.id)))));
+        placeVotes.sort((o1, o2) -> (int) ((o1.vote.positive - o1.vote.negative) - (o2.vote.positive - o2.vote.negative)));
+
+        return new Response(placeVotes.size() < 10 ? placeVotes : placeVotes.subList(0, 10));
     }
 
-    @PostMapping("pictures/download")
+    @PostMapping("loadPictures")
     public void getFile(@RequestBody long id, HttpServletResponse response) {
         try {
             IOUtils.copy(new FileInputStream(fileUtil.root + String.format(path, id)),
@@ -79,6 +89,6 @@ public class PlaceController {
         } catch (IOException e) {
             response.setStatus(HttpStatus.SC_NOT_FOUND);
         }
-        log.i("/place/pictures/download: " + response.getStatus());
+        log.i("/place/loadPictures: " + response.getStatus());
     }
 }
