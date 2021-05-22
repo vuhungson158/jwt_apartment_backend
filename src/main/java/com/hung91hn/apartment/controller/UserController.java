@@ -87,7 +87,7 @@ public class UserController {
 
     private Response responseLogin(UserPrincipal user) {
         user.password = null;
-        return new ResponseT<>(new UserLogin(jwtUtil.generateToken(user), user));
+        return new Response(new UserLogin(jwtUtil.generateToken(user), user));
     }
 
     private String validateLogin(User user) {

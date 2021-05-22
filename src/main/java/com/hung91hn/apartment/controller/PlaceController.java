@@ -3,10 +3,7 @@ package com.hung91hn.apartment.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hung91hn.apartment.helper.FileUtil;
 import com.hung91hn.apartment.helper.Log;
-import com.hung91hn.apartment.model.Place;
-import com.hung91hn.apartment.model.PlaceFilter;
-import com.hung91hn.apartment.model.Response;
-import com.hung91hn.apartment.model.ResponseT;
+import com.hung91hn.apartment.model.*;
 import com.hung91hn.apartment.repository.PlaceRepository;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
@@ -18,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -38,6 +36,7 @@ public class PlaceController {
     @Autowired
     private Log log;
 
+    @RolesAllowed(User.USER)
     @PostMapping("create")
     public Response create(String object, MultipartFile file) throws IOException {
         log.i("POST:/place/create\n" + object);
@@ -51,7 +50,7 @@ public class PlaceController {
 
         if (file != null) fileUtil.save(String.format(path, _place.id), file);
 
-        return new Response();
+        return new Response(_place);
     }
 
     private String validate(Place place) {
@@ -63,13 +62,12 @@ public class PlaceController {
         return null;
     }
 
-
     @PostMapping("gets")
     public Response gets(@RequestBody PlaceFilter filter) {
         final List<Place> places = repository.search(filter);
 
         return places.isEmpty() ? new Response("Không có phòng nào ở khu vực này thoả mãn yêu cầu của bạn")
-                : new ResponseT<>(places);
+                : new Response(places);
     }
 
     @PostMapping("pictures/download")
@@ -81,5 +79,6 @@ public class PlaceController {
         } catch (IOException e) {
             response.setStatus(HttpStatus.SC_NOT_FOUND);
         }
+        log.i("/place/pictures/download: " + response.getStatus());
     }
 }
