@@ -11,15 +11,6 @@ import java.util.List;
 
 @Repository
 public interface PlaceRepository extends JpaRepository<Place, Long> {
-
-        /* todo SQL: bổ xung điều kiện
-        - trả về tối đa 10 PlaceVote có tỉ lệ voteUp/voteCount cao nhất
-        - voteCount = tổng số bản ghi Vote có Vote.placeId = PlaceVote.id
-        - PlaceVote.voteUp = tổng số bản ghi Vote có Vote.placeId = PlaceVote.id AND Vote.positive =1
-        - PlaceVote.voteDown = tổng số bản ghi Vote có Vote.placeId = PlaceVote.id AND Vote.positive =0
-         */
-
-    //Lọc dữ liệu theo PlaceFilter
     @Query("SELECT p FROM Place p WHERE "
             + "p.latitude > :#{#f.latMin} AND p.latitude < :#{#f.latMax}"
             + " AND p.longitude > :#{#f.lngMin} AND p.longitude < :#{#f.lngMax}"

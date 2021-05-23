@@ -68,10 +68,11 @@ public class PlaceController {
         final List<Place> places = repository.search(filter);
         if (places.isEmpty()) return new Response("Không có phòng nào ở khu vực này thoả mãn yêu cầu của bạn");
 
+        // TODO: viết thêm phần này vào PlaceRepository.search@Query {
         final List<PlaceVote> placeVotes = new ArrayList<>();
         places.forEach(place -> placeVotes.add(new PlaceVote(place)));
-
         placeVotes.sort((o1, o2) -> (int) ((o1.vote.positive - o1.vote.negative) - (o2.vote.positive - o2.vote.negative)));
+        //}
 
         return new Response(placeVotes.size() < 10 ? placeVotes : placeVotes.subList(0, 10));
     }
