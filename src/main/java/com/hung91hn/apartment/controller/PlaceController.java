@@ -5,7 +5,6 @@ import com.hung91hn.apartment.helper.FileUtil;
 import com.hung91hn.apartment.helper.Log;
 import com.hung91hn.apartment.model.*;
 import com.hung91hn.apartment.repository.PlaceRepository;
-import com.hung91hn.apartment.repository.VoteRepository;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +36,6 @@ public class PlaceController {
     private FileUtil fileUtil;
     @Autowired
     private Log log;
-
-
-    @Autowired
-    private VoteRepository voteRepo;
 
     @RolesAllowed(User.USER)
     @PostMapping("create")
@@ -74,7 +69,8 @@ public class PlaceController {
         if (places.isEmpty()) return new Response("Không có phòng nào ở khu vực này thoả mãn yêu cầu của bạn");
 
         final List<PlaceVote> placeVotes = new ArrayList<>();
-        places.forEach(place -> placeVotes.add(new PlaceVote(place, new VoteCount(voteRepo.findAllByPlaceId(place.id)))));
+        places.forEach(place -> placeVotes.add(new PlaceVote(place)));
+
         placeVotes.sort((o1, o2) -> (int) ((o1.vote.positive - o1.vote.negative) - (o2.vote.positive - o2.vote.negative)));
 
         return new Response(placeVotes.size() < 10 ? placeVotes : placeVotes.subList(0, 10));

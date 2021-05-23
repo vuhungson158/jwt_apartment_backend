@@ -4,8 +4,8 @@ public class PlaceVote {
     public Place place;
     public VoteCount vote;
 
-    public PlaceVote(Place place, VoteCount vote) {
+    public PlaceVote(Place place) {
         this.place = place;
-        this.vote = vote;
+        this.vote = new VoteCount(place.votes);
     }
 }
