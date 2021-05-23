@@ -72,9 +72,10 @@ public class PlaceController {
         final List<PlaceVote> placeVotes = new ArrayList<>();
         places.forEach(place -> placeVotes.add(new PlaceVote(place)));
         placeVotes.sort((o1, o2) -> (int) ((o1.vote.positive - o1.vote.negative) - (o2.vote.positive - o2.vote.negative)));
-        //}
+        final List<PlaceVote> result = placeVotes.size() < 10 ? placeVotes : placeVotes.subList(0, 10);
+        // }
 
-        return new Response(placeVotes.size() < 10 ? placeVotes : placeVotes.subList(0, 10));
+        return new Response(result);
     }
 
     @PostMapping("loadPictures")
