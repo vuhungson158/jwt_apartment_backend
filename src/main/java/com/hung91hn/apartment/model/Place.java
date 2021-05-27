@@ -12,14 +12,18 @@ public class Place {
     @GeneratedValue()
     public long id;
     public double latitude, longitude;
-    public String name, address, moreInfo;
+    public String name, address, hostName, hostPhone, moreInfo;
     public boolean privateWc, airConditioner, hotWater, fridge, washer;
     public int acreageMin, acreageMax, priceMin, priceMax, roomCount, parkCapacity;
     public Integer curfew;
-    public Long ownerId, inaugurate;
+    public Long hostId, inaugurate;
 
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "placeId")
     public List<Vote> votes;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "placeId")
+    public List<Comment> comments;
 }

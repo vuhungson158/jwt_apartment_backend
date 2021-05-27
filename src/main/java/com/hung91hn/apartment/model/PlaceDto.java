@@ -1,10 +1,10 @@
 package com.hung91hn.apartment.model;
 
-public class PlaceVote {
+public class PlaceDto {
     public Place place;
     public VoteCount vote;
 
-    public PlaceVote(Place place) {
+    public PlaceDto(Place place) {
         this.place = place;
         this.vote = new VoteCount(place.votes);
     }

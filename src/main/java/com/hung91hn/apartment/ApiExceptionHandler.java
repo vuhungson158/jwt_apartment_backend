@@ -11,7 +11,7 @@ public class ApiExceptionHandler {
     @ExceptionHandler(Exception.class)
     public Response handleAllException(Exception e, WebRequest request) {
         if (e instanceof AccessDeniedException) {
-            return new Response(Response.ERROR_CLIENT, "Không đủ quyền.");
+            return new Response(Response.INVALID_ROLE, "Không đủ quyền.");
         } else {
             e.printStackTrace();
             return new Response(Response.ERROR_SERVER, "Lỗi server!");
