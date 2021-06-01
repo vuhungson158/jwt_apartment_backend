@@ -1,7 +1,5 @@
 package com.hung91hn.apartment.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -18,10 +16,10 @@ public class Place {
     public Integer curfew;
     public Long hostId, inaugurate;
 
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "placeId")
-    public List<Vote> votes;
+    @Transient
+    public long voteCountPositive;
+    @Transient
+    public long voteCountNegative;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "placeId")

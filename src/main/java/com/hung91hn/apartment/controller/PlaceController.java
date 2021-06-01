@@ -19,7 +19,6 @@ import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Math.abs;
@@ -65,17 +64,10 @@ public class PlaceController {
 
     @PostMapping("gets")
     public Response gets(@RequestBody PlaceFilter filter) {
-        final List<Place> places = repository.search(filter);
+        final List<Place> places = repository.find(filter);
         if (places.isEmpty()) return new Response("Không có phòng nào ở khu vực này thoả mãn yêu cầu của bạn");
 
-        // TODO: viết thêm phần này vào PlaceRepository.search@Query {
-        final List<PlaceDto> placeDtos = new ArrayList<>();
-        places.forEach(place -> placeDtos.add(new PlaceDto(place)));
-        placeDtos.sort((o1, o2) -> (int) ((o1.vote.positive - o1.vote.negative) - (o2.vote.positive - o2.vote.negative)));
-        final List<PlaceDto> result = placeDtos.size() < 10 ? placeDtos : placeDtos.subList(0, 10);
-        // }
-
-        return new Response(result);
+        return new Response(places);
     }
 
     @PostMapping("loadPictures")

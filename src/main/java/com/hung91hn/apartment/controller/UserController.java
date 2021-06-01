@@ -61,7 +61,8 @@ public class UserController {
     public Response active(@RequestBody UserActive userActive) {
         final String key = userActive.phone;
         final UserRegister _userRegister = (UserRegister) redis.opsForValue().get(key);
-        if (_userRegister == null || userActive.otp != _userRegister.otp) return new Response("Sai OTP");
+        if (_userRegister == null) return new Response("Tài khoản đã hết thời gian kích hoạt");
+        if (userActive.otp != _userRegister.otp) return new Response("Sai OTP");
 
         final UserPrincipal user = _userRegister.user;
         user.roles = User.USER;
