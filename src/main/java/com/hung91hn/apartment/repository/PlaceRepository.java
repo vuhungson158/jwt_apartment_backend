@@ -14,6 +14,7 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
     @Query(nativeQuery = true, value = "SELECT p.*"
             + ", COUNT(IF(v.positive <> 0,1,null)) AS voteCountPositive"
             + ", COUNT(IF(v.positive = 0,1,null)) AS voteCountNegative"
+            + ", COUNT(IF(v.positive <> 0,1,null)) - COUNT(IF(v.positive = 0,1,null)) AS minus"
             + " FROM places AS p"
             + " INNER JOIN votes AS v ON p.id = v.place_id"
             + " GROUP BY v.place_id HAVING"
@@ -27,6 +28,6 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
             + " AND (:#{#f.nonCurfew} = FALSE OR p.curfew IS NULL)"
             + " AND p.acreage_min >= :#{#f.acreageMin}"
             + " AND p.price_max <= :#{#f.priceMax}"
-            + " ORDER BY voteCountPositive-voteCountNegative DESC LIMIT 10")
+            + " ORDER BY minus DESC LIMIT 10")
     List<Place> find(@Param("f") PlaceFilter filter);
 }
