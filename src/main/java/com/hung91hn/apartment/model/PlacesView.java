@@ -1,11 +1,15 @@
 package com.hung91hn.apartment.model;
 
+import org.hibernate.annotations.Immutable;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "places")
-public class Place {
+@Table(name = "placesView")
+@Immutable
+public class PlacesView {
+
     @Id
     @GeneratedValue()
     public long id;
@@ -17,9 +21,9 @@ public class Place {
     public Long hostId, inaugurate;
 
 ////    @Transient
-//    public long voteCountPositive;
+    public long voteCountPositive;
 ////    @Transient
-//    public long voteCountNegative;
+    public long voteCountNegative;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "placeId")
